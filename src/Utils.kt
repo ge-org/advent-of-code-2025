@@ -1,21 +1,14 @@
-import java.math.BigInteger
-import java.security.MessageDigest
-import kotlin.io.path.Path
-import kotlin.io.path.readText
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 
-/**
- * Reads lines from the given input txt file.
- */
-fun readInput(name: String) = Path("src/$name.txt").readText().trim().lines()
+fun readFile(name: String): String = Thread.currentThread().contextClassLoader
+    .getResourceAsStream(name).use { inputStream ->
+        BufferedReader(InputStreamReader(inputStream as InputStream)).readText().trim()
+    }
 
-/**
- * Converts string to md5 hash.
- */
-fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
-    .toString(16)
-    .padStart(32, '0')
+fun readLines(name: String): List<String> = readFile(name).lines()
 
-/**
- * The cleaner shorthand for printing output.
- */
-fun Any?.println() = println(this)
+fun <T> T.println(): T = also { println(this) }
+
+fun <T> T.check(expected: Any): T = this.also { check(this == expected) { "expected $expected but is $this" } }
