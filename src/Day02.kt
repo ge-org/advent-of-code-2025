@@ -13,17 +13,28 @@ fun main() {
         return invalid.sum()
     }
 
-    fun part2(input: List<String>): Int {
-        TODO()
+    fun part2(input: String): Long {
+        val invalid = mutableListOf<Long>()
+        getCandidates(input).forEach { candidate ->
+            val text = candidate.toString()
+            for (chunkSize in 1..(text.length / 2)) {
+                val chunks = text.chunked(chunkSize)
+                if (chunks.all { it == chunks.first() }) {
+                    invalid.add(candidate)
+                    break
+                }
+            }
+        }
+        return invalid.sum()
     }
 
     val testInput = readFile("Day02_test")
     part1(testInput).check(1227775554L)
-//    part2(testInput)
+    part2(testInput).check(4174379265L)
 
     val input = readFile("Day02")
     part1(input).println().check(18952700150L)
-//    part2(input).println().check(6254)
+    part2(input).println().check(28858486244)
 }
 
 private fun getCandidates(input: String): List<Long> = input
